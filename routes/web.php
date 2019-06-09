@@ -58,13 +58,13 @@ Route::middleware('auth')->group(function () {
   Route::get('admin/address/restore/',          'AddressesController@restore')->name('address.restore');
   
   // Users
-  Route::get('admin/users',				'UsersController@admin')->name('user.admin');
-  Route::get('admin/user/new',				'UsersController@create')->name('user.create');
-  Route::post('admin/user/store',				'UsersController@store')->name('user.store');
-  Route::get('admin/user/update/',				'UsersController@edit')->name('user.edit');
+  //Route::get('admin/users',				'UsersController@admin')->name('user.admin');
+  //Route::get('admin/user/new',				'UsersController@create')->name('user.create');
+  //Route::post('admin/user/store',				'UsersController@store')->name('user.store');
+  Route::get('admin/user/edit/{uuid}',				'UsersController@edit')->name('user.edit');
   Route::post('admin/user/update/',				'UsersController@update')->name('user.update');
-  Route::get('admin/user/delete/',				'UsersController@destroy')->name('user.delete');
-  Route::get('admin/user/restore/',				'UsersController@restore')->name('user.restore');
+  //Route::get('admin/user/delete/',				'UsersController@destroy')->name('user.delete');
+  //Route::get('admin/user/restore/',				'UsersController@restore')->name('user.restore');
   
   // Import
   Route::get('admin/import',                    'ImportController@index')->name('import.index');

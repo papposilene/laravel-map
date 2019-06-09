@@ -12,7 +12,12 @@
         <div class="row">
             <div class="card-deck col-12">
                 <div class="card mb-4">
-                    <h5 class="card-header">@ucfirst(trans_choice('app.user', 1))</h5>
+                    <h5 class="card-header">
+                        <span class="badge badge-pill float-right">
+                            <a href="{{ route('user.edit', ['uuid' => $currentUser->uuid]) }}" class="text-info"><i class="fas fa-edit" aria-hidden="true"></i></a>
+                        </span>
+                        @ucfirst(trans_choice('app.user', 1))
+                    </h5>
                     <div class="card-body">
                         <p class="card-text">
                             <i class="fas fa-user" aria-hidden="true"></i> {{ $userData->username }}<br />

@@ -1,14 +1,14 @@
 @extends('layouts.app')
-@section('title', __('auth.signIn'))
+@section('title', @ucfirst(__('auth.signIn')))
 
 @section('main')
 <main role="main" class="container-fluid">
     <div class="row d-flex justify-content-center">
         <form class="col-md-6" method="POST" action="{{ route('login') }}">
             {{ csrf_field() }}
-            <h1 class="mb-3 font-weight-normal text-center">{{ __('auth.logPlease') }}</h1>
+            <h1 class="mb-3 font-weight-normal text-center">@ucfirst(__('auth.logPlease'))</h1>
             <div class="row form-group{{ $errors->has('email') ? ' has-error' : '' }}">
-                <label for="email" class="col-12 control-label">{{ __('auth.email') }}</label>
+                <label for="email" class="col-12 control-label">@ucfirst(__('auth.email'))</label>
                 <div class="col-12">
                     <input id="email" type="email" class="form-control" name="email" value="{{ old('email') }}" required autofocus />
                     @if ($errors->has('email'))
@@ -19,7 +19,7 @@
                 </div>
             </div>
             <div class="row form-group{{ $errors->has('password') ? ' has-error' : '' }}">
-                <label for="password" class="col-12 control-label">{{ __('auth.password') }}</label>
+                <label for="password" class="col-12 control-label">@ucfirst(__('auth.password'))</label>
                 <div class="col-12">
                     <input id="password" type="password" class="form-control" name="password" required />
                     @if ($errors->has('password'))
@@ -33,17 +33,17 @@
                 <div class="col-12 col-md-offset-4">
                     <div class="checkbox">
                         <label>
-                            <input type="checkbox" name="remember" {{ old('remember') ? 'checked' : '' }}> {{ __('auth.rememberMe') }}
+                            <input type="checkbox" name="remember" {{ old('remember') ? 'checked' : '' }}> @ucfirst(__('auth.rememberMe'))
                         </label>
                     </div>
                 </div>
             </div>
-            <button class="btn btn-lg btn-primary btn-block" type="submit">{{ __('auth.signIn') }}</button>
+            <button class="btn btn-lg btn-primary btn-block" type="submit">@ucfirst(__('auth.signIn'))</button>
         </form>
         <div class="col-12 py-3 text-center">
-            <a class="btn btn-link" href="{{ route('password.request') }}">{{ __('auth.pwdForget') }}</a>
+            <a class="btn btn-link" href="{{ route('password.request') }}">@ucfirst(__('auth.pwdForget'))</a>
             @if(Route::has('register'))
-            <a class="btn btn-link" href="{{ route('register') }}">{{ __('auth.register') }}</a>
+            <a class="btn btn-link" href="{{ route('register') }}">@ucfirst(__('auth.register'))</a>
             @endif
         </div>
     </div>
