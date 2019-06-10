@@ -32,7 +32,7 @@ class Addresses extends Model
      * @var array
      */
     protected $fillable = [
-         'name', 'address', 'latlng', 'description', 'phone', 'url', 'user_uuid', 'country_uuid', 'category_uuid', 'place_id'
+         'name', 'owner', 'address', 'latlng', 'description', 'phone', 'url', 'user_uuid', 'country_uuid', 'category_uuid', 'place_id'
     ];
 
     /**

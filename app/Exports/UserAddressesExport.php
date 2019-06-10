@@ -32,15 +32,16 @@ class UserAddressesExport implements FromQuery, WithHeadings, ShouldAutoSize
         return [
             'uuid',             // A
             'name',             // B
-            'address',          // C
-            'description',      // D
-            'url',              // E
-            'phone',            // F
-            'latlng',           // G
-            'user_uuid',        // H
-            'category_uuid',    // I
-            'country_uuid',     // J
-            'place_id'          // K
+            'owner',            // C
+            'address',          // D
+            'description',      // E
+            'url',              // F
+            'phone',            // G
+            'latlng',           // H
+            'user_uuid',        // I
+            'category_uuid',    // J
+            'country_uuid',     // K
+            'place_id'          // L
         ];
     }
 

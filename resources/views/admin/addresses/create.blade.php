@@ -49,9 +49,15 @@
             </div>
             <div class="input-group mb-3">
                 <div class="input-group-prepend">
-                    <span class="input-group-text border-secondary" id="formName"><i class="fas fa-address-card" aria-hidden="true"></i></span>
+                    <span class="input-group-text border-secondary" id="formName"><i class="fas fa-landmark" aria-hidden="true"></i></span>
                 </div>
                 <input type="text" class="form-control border-secondary" name="name" id="name" autocomplete="off" placeholder="@ucfirst(__('app.formName'))" aria-label="@ucfirst(__('app.formName'))" aria-describedby="formName">
+            </div>
+            <div class="input-group mb-3">
+                <div class="input-group-prepend">
+                    <span class="input-group-text border-secondary" id="formOwner"><i class="fas fa-address-card" aria-hidden="true"></i></span>
+                </div>
+                <input type="text" class="form-control border-secondary" name="ower" id="ower" autocomplete="off" placeholder="@ucfirst(__('app.formOwner'))" aria-label="@ucfirst(__('app.formOwner'))" aria-describedby="formOwner">
             </div>
             <div class="input-group mb-3">
                 <div class="input-group-prepend">
@@ -103,7 +109,7 @@
                 <textarea class="form-control border-secondary" name="description" autocomplete="off" rows="5" placeholder="@ucfirst(__('app.formDescription'))" aria-label="@ucfirst(__('app.formDescription'))"></textarea>
             </div>
             <div class="mb-3 text-right">
-                <button type="submit" class="btn btn-primary">@ucfirst(__('app.save'))</button>
+                <button type="submit" class="btn btn-primary"><i class="fas fa-save" aria-hidden="true"></i> @ucfirst(__('app.save'))</button>
             </div>
 		</form>
     </div>

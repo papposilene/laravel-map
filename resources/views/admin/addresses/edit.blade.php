@@ -50,9 +50,15 @@
             </div>
             <div class="input-group mb-3">
                 <div class="input-group-prepend">
-                    <span class="input-group-text border-secondary" id="formName"><i class="fas fa-address-card" aria-hidden="true"></i></span>
+                    <span class="input-group-text border-secondary" id="formName"><i class="fas fa-landmark" aria-hidden="true"></i></span>
                 </div>
                 <input type="text" class="form-control border-secondary" name="name" id="name" autocomplete="off" value="{{ $address->name }}" placeholder="@ucfirst(__('app.formName'))" aria-label="@ucfirst(__('app.formName'))" aria-describedby="formName" />
+            </div>
+            <div class="input-group mb-3">
+                <div class="input-group-prepend">
+                    <span class="input-group-text border-secondary" id="formOwner"><i class="fas fa-address-card" aria-hidden="true"></i></span>
+                </div>
+                <input type="text" class="form-control border-secondary" name="owner" id="owner" autocomplete="off" value="{{ $address->owner }}" placeholder="@ucfirst(__('app.formOwner'))" aria-label="@ucfirst(__('app.formOwner'))" aria-describedby="formOwner">
             </div>
             <div class="input-group mb-3">
                 <div class="input-group-prepend">
@@ -74,7 +80,7 @@
                 $filterngCtr = $countries->whereStrict('uuid', $address->country_uuid);
                 $filteredCtr = $filterngCtr->first();
                 @endphp
-                <input type="text" class="form-control border-secondary" id="countries" autocomplete="off" value="{{ $filteredCtr->name_eng_common }}" readonly placeholder="@ucfirst(__('app.formCountry'))" aria-label="@ucfirst(__('app.formCountry'))" aria-describedby="formCountry" />
+                <input type="text" class="form-control border-secondary" id="countries" autocomplete="off" value="{{ $filteredCtr->name_eng_common }}" placeholder="@ucfirst(__('app.formCountry'))" aria-label="@ucfirst(__('app.formCountry'))" aria-describedby="formCountry" />
                 <input type="hidden" name="country_uuid" id="country_uuid" value="{{ $filteredCtr->uuid }}" />
             </div>
             <div class="input-group mb-3">
@@ -111,7 +117,7 @@
                     {{ __('app.createdat', ['date' => $address->created_at->format('d/m/Y, H:i:s')]) }}.
                     {{ __('app.updatedat', ['date' => $address->updated_at->format('d/m/Y, H:i:s')]) }}.
                 </em></small>
-                <button type="submit" class="btn btn-primary">@ucfirst(__('app.save'))</button>
+                <button type="submit" class="btn btn-primary"><i class="fas fa-save" aria-hidden="true"></i> @ucfirst(__('app.save'))</button>
             </div>
 		</form>
     </div>
@@ -126,7 +132,7 @@
 $( function() {
     $("#categories").autocomplete({
         source: function (request, response) {
-            $.getJSON("{{ route('api.categories.listing', ['user' => $currentUser->uuid, 'query']) }}=" + request.term, function (data) {
+            $.getJSON("{!! route('api.categories.listing', ['user' => $currentUser->uuid, 'query']) !!}=" + request.term, function (data) {
                 response($.map(data.categories, function (value, key) {
                     return {
                         label: value.name,
@@ -143,7 +149,7 @@ $( function() {
 	});
     $("#countries").autocomplete({
         source: function (request, response) {
-            $.getJSON("{{ route('api.countries.listing', ['query']) }}=" + request.term, function (data) {
+            $.getJSON("{!! route('api.countries.listing', ['query']) !!}=" + request.term, function (data) {
                 response($.map(data, function (value, key) {
                     return {
                         uuid: value.uuid,

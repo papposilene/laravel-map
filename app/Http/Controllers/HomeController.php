@@ -15,99 +15,136 @@ use Illuminate\Support\Facades\Auth;
 class HomeController extends Controller
 {
     /**
+     * Display a listing of the resource.
+     *
+     * @return \Illuminate\Http\Response
+     */
+    public function index()
+    {
+        //
+    }
+    
+    /**
      * Show the index map.
      *
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function index(Request $request)
-    {
-        $userAuth = Auth::user();
+    public function home(Request $request)
+    {        
         $usrQuery = $request->query('user');
-        $ctrQuery = strtoupper($request->query('cca3'));
+        $addresses = Addresses::all();
+        $countries = Countries::all();
+        // If an uuid's user is given
+        if(filled($usrQuery))
+        {
+            $usrInfo = (object) ['uuid' => $usrQuery];
+            $catDefault = Categories::whereNull('user_uuid')->get();
+            $catUser = Categories::where('user_uuid', $usrQuery)->get();
+            $categories = collect([$catDefault, $catUser]);
+            $visited = UserCountries::where('user_uuid', $usrQuery)->get();
+        }
+        // If there is no uuid's user but user is auth
+        elseif(Auth::check())
+        {
+            $userAuth = Auth::user();
+            $usrInfo = (object) ['uuid' => null];
+            $catDefault = Categories::whereNull('user_uuid')->get();
+            $catUser = Categories::where('user_uuid', $userAuth->uuid)->get();
+            $categories = collect([$catDefault, $catUser]);
+            $visited = UserCountries::where('user_uuid', $userAuth->uuid)->orderBy('country_cca3', 'asc')->get();
+        }
+        else
+        {
+            $usrInfo = (object) ['uuid' => null];
+            $categories = Categories::all();
+            $visited = UserCountries::all();
+        }
+        return view('list',
+                        [
+                            'usrInfo' => $usrInfo,
+                            'addresses' => $addresses,
+                            'categories' => $categories->flatten(),
+                            'countries' => $countries,
+                            'visited' => $visited
+                        ]);
+    }
+    
+    /**
+     * Show the index map.
+     *
+     * @param  \Illuminate\Http\Request  $request
+     * @return \Illuminate\Http\Response
+     */
+    public function map(Request $request)
+    {
         $afCountries = collect();
         $amCountries = collect();
         $asCountries = collect();
         $euCountries = collect();
         $ocCountries = collect();
+        $catInfo = (object) ['uuid' => $request->query('category')];
         // If an uuid's user is given
-        if(filled($usrQuery))
-        {
-            $usrInfo = (object) ['uuid' => $usrQuery];
-            if(filled($ctrQuery))
-            {
-                $ctrInfo = Countries::where('cca3', $ctrQuery)->first();
-                $usrCountries = UserCountries::where('user_uuid', $usrQuery)->get();
+        if ($request->has('user')) {
+            $usrInfo = User::find($request->query('user'));
+            $catDefault = Categories::whereNull('user_uuid')->get();
+            $catUser = Categories::where('user_uuid', $usrInfo->uuid)->get();
+            $categories = collect([$catDefault, $catUser]);
+            // If country
+            if ($request->has('country')) {
+                $ctrInfo = Countries::where('cca3', strtoupper($request->query('country')))->first();
+                $usrCountries = UserCountries::where('user_uuid', $usrInfo->uuid)->get();
             }
             else
             {
                 $ctrInfo = (object) ['cca3' => null, 'latlng' => '{"lat":20, "lng":0}'];
-                $usrCountries = UserCountries::where('user_uuid', $usrQuery)->get();
+                $usrCountries = UserCountries::where('user_uuid', $usrInfo->uuid)->get();
             }
-            foreach($usrCountries as $usrCountry)
-            {
-                $afCountries->push(Countries::where([['region', 'Africa'], ['uuid', $usrCountry->country_uuid]])->get());
-                $amCountries->push(Countries::where([['region', 'Americas'], ['uuid', $usrCountry->country_uuid]])->get());
-                $asCountries->push(Countries::where([['region', 'Asia'], ['uuid', $usrCountry->country_uuid]])->get());
-                $euCountries->push(Countries::where([['region', 'Europe'], ['uuid', $usrCountry->country_uuid]])->get());
-                $ocCountries->push(Countries::where([['region', 'Oceania'], ['uuid', $usrCountry->country_uuid]])->get());
-            }
-            $catDefault = Categories::whereNull('user_uuid')->get();
-            $catUser = Categories::where('user_uuid', $usrQuery)->get();
-            $categories = collect([$catDefault, $catUser]);
         }
         // If there is no uuid's user but user is auth
-        elseif(Auth::check())
-        {
-            //$usrInfo = (object) ['uuid' => $userAuth->uuid];
+        elseif(Auth::check()) {
+            $userAuth = Auth::user();
             $usrInfo = (object) ['uuid' => null];
-            if(filled($ctrQuery))
-            {
-                $ctrInfo = Countries::where('cca3', $ctrQuery)->first();
-                $usrCountries = UserCountries::where('user_uuid', $userAuth->uuid)->orderBy('country_cca3', 'asc')->get();
-            }
-            else
-            {
-                $ctrInfo = (object) ['cca3' => null, 'latlng' => '{"lat":20, "lng":0}'];
-                $usrCountries = UserCountries::where('user_uuid', $userAuth->uuid)->orderBy('country_cca3', 'asc')->get();
-            }
-            foreach($usrCountries as $usrCountry)
-            {
-                $afCountries->push(Countries::where([['region', 'Africa'], ['uuid', $usrCountry->country_uuid]])->orderBy('created_at', 'asc')->get());
-                $amCountries->push(Countries::where([['region', 'Americas'], ['uuid', $usrCountry->country_uuid]])->orderBy('created_at', 'asc')->get());
-                $asCountries->push(Countries::where([['region', 'Asia'], ['uuid', $usrCountry->country_uuid]])->orderBy('created_at', 'asc')->get());
-                $euCountries->push(Countries::where([['region', 'Europe'], ['uuid', $usrCountry->country_uuid]])->orderBy('created_at', 'asc')->get());
-                $ocCountries->push(Countries::where([['region', 'Oceania'], ['uuid', $usrCountry->country_uuid]])->orderBy('created_at', 'asc')->get());
-            }
             $catDefault = Categories::whereNull('user_uuid')->get();
             $catUser = Categories::where('user_uuid', $userAuth->uuid)->get();
             $categories = collect([$catDefault, $catUser]);
-        }
-        else
-        {
-            $usrInfo = (object) ['uuid' => null];
-            if(filled($ctrQuery))
-            {
-                $ctrInfo = Countries::where('cca3', $ctrQuery)->first();
-                $usrCountries = UserCountries::all();
+            // If country
+            if ($request->has('country')) {
+                $ctrInfo = Countries::where('cca3', strtoupper($request->query('country')))->first();
+                $usrCountries = UserCountries::where('user_uuid', $userAuth->uuid)->get();
             }
             else
             {
                 $ctrInfo = (object) ['cca3' => null, 'latlng' => '{"lat":20, "lng":0}'];
-                $usrCountries = UserCountries::all();
+                $usrCountries = UserCountries::where('user_uuid', $userAuth->uuid)->get();
             }
-            foreach($usrCountries as $usrCountry)
-            {
-                $afCountries->push(Countries::where([['region', 'Africa'], ['uuid', $usrCountry->country_uuid]])->get());
-                $amCountries->push(Countries::where([['region', 'Americas'], ['uuid', $usrCountry->country_uuid]])->get());
-                $asCountries->push(Countries::where([['region', 'Asia'], ['uuid', $usrCountry->country_uuid]])->get());
-                $euCountries->push(Countries::where([['region', 'Europe'], ['uuid', $usrCountry->country_uuid]])->get());
-                $ocCountries->push(Countries::where([['region', 'Oceania'], ['uuid', $usrCountry->country_uuid]])->get());
-            }
-            $categories = Categories::all();
         }
-        return view('home', [
+        else {
+            $usrInfo = (object) ['uuid' => null];
+            $categories = Categories::all();
+            // If country
+            if ($request->has('country')) {
+                $ctrInfo = Countries::where('cca3', strtoupper($request->query('country')))->first();
+            }
+            else
+            {
+                $ctrInfo = (object) ['cca3' => null, 'latlng' => '{"lat":20, "lng":0}'];
+            }
+            $usrCountries = UserCountries::all();
+        }
+        
+        foreach($usrCountries as $usrCountry)
+        {
+            $afCountries->push(Countries::where([['region', 'Africa'], ['uuid', $usrCountry->country_uuid]])->get());
+            $amCountries->push(Countries::where([['region', 'Americas'], ['uuid', $usrCountry->country_uuid]])->get());
+            $asCountries->push(Countries::where([['region', 'Asia'], ['uuid', $usrCountry->country_uuid]])->get());
+            $euCountries->push(Countries::where([['region', 'Europe'], ['uuid', $usrCountry->country_uuid]])->get());
+            $ocCountries->push(Countries::where([['region', 'Oceania'], ['uuid', $usrCountry->country_uuid]])->get());
+        }
+        
+        return view('map', [
                                 'usrInfo' => $usrInfo,
+                                'catInfo' => $catInfo,
                                 'ctrInfo' => $ctrInfo,
                                 'categories' => $categories->flatten(),
                                 'afCountries' => $afCountries->flatten(),

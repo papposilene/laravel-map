@@ -161,7 +161,7 @@
                 <textarea id="descForm" name="description" class="form-control border-secondary" autocomplete="off" placeholder="@ucfirst(__('app.formDescription'))" rows="5" aria-label="@ucfirst(__('app.formDescription'))" aria-describedby="input-description" /></textarea>
             </div>
             <div class="text-right">
-                <button type="submit" class="btn btn-primary">@ucfirst(__('app.save'))</button>
+                <button type="submit" class="btn btn-primary"><i class="fas fa-save" aria-hidden="true"></i> @ucfirst(__('app.save'))</button>
             </div>
         </form>
     </div>

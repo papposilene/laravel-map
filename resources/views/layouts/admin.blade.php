@@ -20,19 +20,6 @@
     h1, h2, h3, h4, h5{font-family: 'Roboto', sans-serif;}
     </style>
     @yield('css-style')
-    <script type="text/javascript">
-    var _paq = _paq || [];
-    _paq.push(['trackPageView']);
-    _paq.push(['enableLinkTracking']);
-    (function() {
-        var u="//pwk.psln.nl/";
-        _paq.push(['setTrackerUrl', u+'matomo.php']);
-        _paq.push(['setSiteId', '8']);
-        var d=document, g=d.createElement('script'), s=d.getElementsByTagName('script')[0];
-        g.type='text/javascript'; g.async=true; g.defer=true; g.src=u+'matomo.js'; s.parentNode.insertBefore(g,s);
-    })();
-    </script>
-    <noscript><p><img src="//pwk.psln.nl/matomo.php?idsite=8&amp;rec=1" style="border:0;" alt="" /></p></noscript>
 </head>
 
 <body>

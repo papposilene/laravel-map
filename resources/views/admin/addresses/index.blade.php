@@ -117,18 +117,19 @@ height: 175px;
             </div>
             <div class="card-body">
                 <p class="text-justify">
-                    <a href="{{ route('address.admin', ['category' => $filteredCat->uuid]) }}" class="text-dark">
-                    <i class="fas fa-{{ $filteredCat->icon }}" aria-hidden="true"></i> {{ $filteredCat->name }}
-                    </a><br />
+                    <i class="fas fa-{{ $filteredCat->icon }}" aria-hidden="true"></i> {{ $filteredCat->name }}.<br />
+                    @isset($address->owner)
+                    <i class="fas fa-id-card" aria-hidden="true" aria-hidden="true"></i> {{ $address->owner }}.<br />
+                    @endisset
                     {{ $filteredCtr->flag }}&nbsp;{{ $address->address }}, 
                     <a href="{{ route('address.admin', ['country' => $filteredCtr->cca3]) }}" class="text-dark">{{ $filteredCtr->name_eng_common }}</a>.<br /><br />
                     @isset($address->url)
-                    <i class="fas fa-link"></i> <a href="{{ $address->url }}" class="text-dark" target="_blank" rel="noopener">@ucfirst(__('app.website'))</a>.<br />
+                    <i class="fas fa-link" aria-hidden="true"></i> <a href="{{ $address->url }}" class="text-dark" target="_blank" rel="noopener">@ucfirst(__('app.website'))</a>.<br />
                     @endisset
                     @isset($address->phone)
-                    <i class="fas fa-phone"></i> <a href="tel:{{ $address->phone }}" class="text-dark" target="_blank" rel="noopener">{{ $address->phone }}</a>.<br />
+                    <i class="fas fa-phone" aria-hidden="true"></i> <a href="tel:{{ $address->phone }}" class="text-dark" target="_blank" rel="noopener">{{ $address->phone }}</a>.<br />
                     @endisset
-                    <i class="fas fa-map-marker-alt"></i> <a href="https://www.google.com/maps/search/?api=1&query={{ $address->latlng }}" class="text-dark" target="_blank" rel="noopener">{{ $address->latlng }}</a>.
+                    <i class="fas fa-map-marker-alt" aria-hidden="true"></i> <a href="https://www.google.com/maps/search/?api=1&query={{ $address->latlng }}" class="text-dark" target="_blank" rel="noopener">{{ $address->latlng }}</a>.
                 </p>
                 <p class="text-justify">
                     {{ $address->description }}

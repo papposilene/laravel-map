@@ -18,6 +18,7 @@ return [
     // Basic words
 	'about' => 'A propos',
 	'all' => 'tout',
+    'allMap' => 'afficher l’ensemble de la carte',
 	'addressesList' => 'liste des adresses',
     'admin' => 'administration',
 	'add' => 'ajouter',
@@ -57,6 +58,7 @@ return [
 	'obligatory' => 'obligatoire',
     'officially' => 'officiellement',
 	'old' => 'ancien',
+    'owner' => 'propriétaire',
 	'restore' => 'récupérer',
 	'restored' => 'restauré',
 	'save' => 'enregistrer',
@@ -91,6 +93,7 @@ return [
     'formIcon' => 'icône',
     'formColor' => 'couleur',
 	'formName' => 'nom',
+    'formOwner' => 'propriétaire',
     'formPhone' => 'téléphone',
     'formSlug' => 'slug',
 	'formTitle' => 'titre',

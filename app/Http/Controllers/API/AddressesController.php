@@ -51,14 +51,37 @@ class AddressesController extends Controller
     public function point(Request $request)
     {
         $usrQuery = $request->query('user');
-        $ctrQuery = strtoupper($request->query('cca3'));
+        $catQuery = $request->query('category');
+        $ctrQuery = strtoupper($request->query('country'));
         $countries = collect();
         $features = array();
         
-        if(filled($usrQuery) && filled($ctrQuery))
+        if(filled($usrQuery) && filled($catQuery) && filled($ctrQuery))
+        {
+            $country = Countries::where('cca3', $ctrQuery)->first();
+            $category = Categories::where('uuid', $catQuery)->first();
+            $addresses = Addresses::where([['user_uuid', $usrQuery], ['category_uuid', $category->uuid]])->get();
+        }
+        elseif(filled($usrQuery) && filled($catQuery))
+        {
+            $category = Categories::where('uuid', $catQuery)->first();
+            $addresses = Addresses::where([['user_uuid', $usrQuery], ['category_uuid', $category->uuid]])->get();
+        }
+        elseif(filled($usrQuery) && filled($ctrQuery))
         {
             $country = Countries::where('cca3', $ctrQuery)->first();
             $addresses = Addresses::where([['user_uuid', $usrQuery], ['country_uuid', $country->uuid]])->get();
+        }
+        elseif(blank($usrQuery) && filled($catQuery) && filled($ctrQuery))
+        {
+            $country = Countries::where('cca3', $ctrQuery)->first();
+            $category = Categories::where('uuid', $catQuery)->first();
+            $addresses = Addresses::where([['country_uuid', $country->uuid], ['category_uuid', $category->uuid]])->get();
+        }
+        elseif(blank($usrQuery) && filled($catQuery))
+        {
+            $category = Categories::where('uuid', $catQuery)->first();
+            $addresses = Addresses::where('category_uuid', $category->uuid)->get();
         }
         elseif(blank($usrQuery) && filled($ctrQuery))
         {
@@ -91,6 +114,7 @@ class AddressesController extends Controller
                                 'properties' => array(
                                                       'uuid'            => $address->uuid,
                                                       'name'            => $address->name,
+                                                      'owner'           => $address->owner,
                                                       'address'         => $address->address,
                                                       'latlng'          => $address->latlng,
                                                       'phone'           => $phone,

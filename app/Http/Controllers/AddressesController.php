@@ -95,60 +95,58 @@ class AddressesController extends Controller
      */
     public function store(Request $request)
     {
-        $user = Auth::user();
-        $uuid = $request->user_uuid;
-        if($user->uuid === $request->user_uuid)
+        $request->validate(
+                    [
+                        'name' => 'string|required|max:255',
+                        'owner' => 'string|nullable|max:255',
+                        'address' => 'string|required',
+                        'latlng' => 'string|required|max:255',
+                        'phone' => 'string|nullable|max:255',
+                        'url' => 'url|nullable|max:255',
+                        'description' => 'string|nullable',
+                        'user_uuid' => 'uuid|required|unique:users',
+                        'category_uuid' => 'uuid|required|unique:categories',
+                        'country_uuid' => 'uuid|required|unique:countries',
+                        'place_id' => 'int|nullable'
+                    ]);
+        $uUuid = $request->user_uuid;
+        $cUuid = $request->country_uuid;
+        $aName = $request->name;
+        $aOwnr = $request->owner;
+        $aAddr = $request->address;
+        $aGeol = $request->latlng;
+        $aDesc = $request->description;
+        $aPhon = $request->phone;
+        $aSite = $request->url;
+        $aCate = $request->category_uuid;
+        $aPlId = $request->place_id;
+        
+        $isVisited = UserCountries::where([['user_uuid', $uuuid], ['country_uuid', $cuuid]])->first();
+        if(empty($isVisited))
         {
-
-            $request->validate([
-                'name' => 'required|max:255',
-                'address' => 'required|string',
-                'latlng' => 'required|string|max:255',
-                'phone' => 'string|nullable|max:255',
-                'url' => 'url|nullable|max:255',
-                'description' => 'string|nullable',
-                'user_uuid' => 'required|uuid|unique:users',
-                'category_uuid' => 'required|uuid|unique:categories',
-                'country_uuid' => 'required|uuid|unique:countries',
-                'place_id' => 'int|nullable',
-            ]);
-            $uuuid = $request->user_uuid;
-            $cuuid = $request->country_uuid;
-            $aname = $request->name;
-            $aaddr = $request->address;
-            $ageol = $request->latlng;
-            $adesc = $request->description;
-            $aphon = $request->phone;
-            $aurl = $request->url;
-            $acate = $request->category_uuid;
-            $aplid = $request->place_id;
-            $isVisited = UserCountries::where([['user_uuid', $uuuid], ['country_uuid', $cuuid]])->first();
-            if(empty($isVisited))
-            {
-                // New visited country
-                $country = Countries::where('uuid', $cuuid)->firstOrFail();
-                $visited = new UserCountries;
-                $visited->user_uuid = $uuuid;
-                $visited->country_uuid = $cuuid;
-                $visited->country_cca3 = $country->cca3;
-                $visited->save();
-            }
-
-            // New address in an already visited country
-            $address = new Addresses;
-            $address->name          = $aname;
-            $address->address       = $aaddr;
-            $address->description   = $adesc;
-            $address->phone         = $aphon;
-            $address->url           = $aurl;
-            $address->latlng        = $ageol;
-            $address->user_uuid     = $uuuid;
-            $address->category_uuid = $acate;
-            $address->country_uuid  = $cuuid;
-            $address->place_id      = $aplid;
-            $address->save();
-            return redirect()->route('address.admin')->with('status', 'addOk');
+            // New visited country
+            $country = Countries::where('uuid', $cuuid)->firstOrFail();
+            $visited = new UserCountries;
+            $visited->user_uuid = $uuuid;
+            $visited->country_uuid = $cuuid;
+            $visited->country_cca3 = $country->cca3;
+            $visited->save();
         }
+        // New address in an already visited country
+        $address = new Addresses;
+        $address->name          = $aName;
+        $address->owner         = $aOwnr;
+        $address->address       = $aAddr;
+        $address->description   = $aDesc;
+        $address->phone         = $aPhon;
+        $address->url           = $aSite;
+        $address->latlng        = $aGeol;
+        $address->user_uuid     = $uUuid;
+        $address->category_uuid = $aCate;
+        $address->country_uuid  = $cUuid;
+        $address->place_id      = $aPlId;
+        $address->save();
+        return redirect()->route('address.admin')->with('status', 'addOk');
     }
 
     /**
@@ -174,40 +172,57 @@ class AddressesController extends Controller
     public function update(Request $request)
     {
         $user = Auth::user();
-        $uuidUsr = $request->user_uuid;
-        if($user->uuid === $uuidUsr)
+        $request->validate(
+                    [
+                        'user_uuid' => 'required|uuid',
+                        'addr_uuid' => 'required|uuid',
+                        'name' => 'string|required|max:255',
+                        'owner' => 'string|nullable|max:255',
+                        'address' => 'string|required',
+                        'latlng' => 'string|required|max:255',
+                        'phone' => 'string|nullable|max:255',
+                        'url' => 'url|nullable|max:255',
+                        'description' => 'string|nullable',
+                        'category_uuid' => 'uuid|required|unique:categories',
+                        'country_uuid' => 'uuid|required|unique:countries'
+                    ]);
+        $uUuid = $request->user_uuid;
+        $aUuid = $request->addr_uuid;
+        $aName = $request->name;
+        $aOwnr = $request->owner;
+        $aAddr = $request->address;
+        $cUuid = $request->country_uuid;
+        $aGeol = $request->latlng;
+        $aDesc = $request->description;
+        $aPhon = $request->phone;
+        $aSite = $request->url;
+        $aCate = $request->category_uuid;
+        
+        $isVisited = UserCountries::where([['user_uuid', $uUuid], ['country_uuid', $cUuid]])->first();
+        if(empty($isVisited))
         {
-            $request->validate([
-                    'addr_uuid' => 'required|uuid',
-                    'name' => 'required|max:255',
-                    'address' => 'required|string',
-                    'latlng' => 'required|string|max:255',
-                    'phone' => 'string|nullable|max:255',
-                    'url' => 'url|nullable|max:255',
-                    'description' => 'string|nullable',
-                    'category_uuid' => 'required|uuid|unique:categories'
-            ]);
-            $uuidAdd = $request->addr_uuid;
-            $nameAdd = $request->name;
-            $addrAdd = $request->address;
-            $geolAdd = $request->latlng;
-            $descAdd = $request->description;
-            $phonAdd = $request->phone;
-            $urlAdd = $request->url;
-            $cateAdd = $request->category_uuid;
-            
-            // Update an existing address
-            $address = Addresses::find($uuidAdd);
-            $address->name          = $nameAdd;
-            $address->address       = $addrAdd;
-            $address->description   = $descAdd;
-            $address->phone         = $phonAdd;
-            $address->url           = $urlAdd;
-            $address->latlng        = $geolAdd;
-            $address->category_uuid = $cateAdd;
-            $address->save();
-            return redirect()->route('address.admin')->with('status', 'updOk');
+            // New visited country
+            $country = Countries::where('uuid', $cuuid)->firstOrFail();
+            $visited = new UserCountries;
+            $visited->user_uuid = $uuuid;
+            $visited->country_uuid = $cuuid;
+            $visited->country_cca3 = $country->cca3;
+            $visited->save();
         }
+            
+        // Update an existing address
+        $address = Addresses::find($aUuid);
+        $address->name          = $aName;
+        $address->owner         = $aOwnr;
+        $address->address       = $aAddr;
+        $address->description   = $aDesc;
+        $address->phone         = $aPhon;
+        $address->url           = $aSite;
+        $address->latlng        = $aGeol;
+        $address->country_uuid  = $cUuid;
+        $address->category_uuid = $aCate;
+        $address->save();
+        return redirect()->route('address.admin')->with('status', 'updOk');
     }
 
     /**

@@ -79,7 +79,7 @@
             
             
             <div class="text-right">
-                <button type="submit" class="btn btn-primary">@ucfirst(__('app.save'))</button>
+                <button type="submit" class="btn btn-primary"><i class="fas fa-save" aria-hidden="true"></i> @ucfirst(__('app.save'))</button>
             </div>
         </form>
     </div>

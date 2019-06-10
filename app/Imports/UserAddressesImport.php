@@ -27,13 +27,14 @@ class UserAddressesImport implements ToCollection, WithHeadingRow, WithChunkRead
         {
             $user = Auth::user();
             $name           = (!empty($row['name']) ? $row['name'] : null);
+            $owner          = (!empty($row['owner']) ? $row['owner'] : null);
             $address        = (!empty($row['address']) ? $row['address'] : null);
             $description    = (!empty($row['description']) ? $row['description'] : null);
             $phone          = (!empty($row['phone']) ? $row['phone'] : null);
             $url            = (!empty($row['url']) ? $row['url'] : null);
             $latlng         = (!empty($row['latlng']) ? $row['latlng'] : null);
             $category       = (!empty($row['category']) ? $row['category'] : 'Untitled Category');
-            $country        = (!empty($row['cca3']) ? $row['cca3'] : null);
+            $country        = (!empty($row['country']) ? $row['country'] : null);
             $place_id       = (!empty($row['place_id']) ? $row['place_id'] : null);
             
             // Search if a category exists with that name
@@ -52,24 +53,29 @@ class UserAddressesImport implements ToCollection, WithHeadingRow, WithChunkRead
             
             // Search if a country exists with that cca3, if it's in
             // the user's visited countries list.
-            $isCountry = Countries::where('cca3', 'LIKE', "%$country%")->first();
-            $isVisited = UserCountries::where([['user_uuid', $user->uuid], ['country_uuid', $isCountry->uuid]])->first();
-            if(empty($isVisited))
+            $isCodeCountry = Countries::where('cca3', 'LIKE', "%$country%")->first();
+            $isUuidCountry = Countries::where('uuid', $country)->first();
+            if(filled($isCodeCountry) || filled($isUuidCOuntry))
             {
-                $visited = new UserCountries;
-                $visited->user_uuid = $user->uuid;
-                $visited->country_uuid = $isCountry->uuid;
-                $visited->country_cca3 = $isCountry->cca3;
-                $visited->save();
+                $isVisited = UserCountries::where([['user_uuid', $user->uuid], ['country_uuid', $isCountry->uuid]])->first();
+                if(empty($isVisited))
+                {
+                    $visited = new UserCountries;
+                    $visited->user_uuid = $user->uuid;
+                    $visited->country_uuid = $isCountry->uuid;
+                    $visited->country_cca3 = $isCountry->cca3;
+                    $visited->save();
+                }
             }
             
             Addresses::updateOrCreate(
                 [
-                    'user_uuid'			=> $user->uuid,
-                    'name'              => $name,
-                    'latlng'            => $latlng,
+                    'user_uuid'     => $user->uuid,
+                    'name'          => $name,
+                    'latlng'        => $latlng,
                 ],
                 [
+                    'owner'         => $owner,
                     'address'       => $address,
                     'description'   => $description,
                     'phone'         => $phone,

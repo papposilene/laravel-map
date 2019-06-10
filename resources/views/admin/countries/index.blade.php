@@ -92,7 +92,7 @@
                 <input type="hidden" name="country_uuid" value="{{ $country->uuid }}" />
                 <input type="hidden" name="user_uuid" value="{{ $currentUser->uuid }}" />
                 <span class="badge badge-light badge-pill float-right">
-                    <a href="{{ route('home', ['cca3' => $country->cca3]) }}" class="btn btn-sm text-primary" target="_blank" rel="noopener"><i class="fas fa-map-marked-alt" aria-hidden="true"></i></a>
+                    <a href="{{ route('map', ['country' => $country->cca3]) }}" class="btn btn-sm text-primary" target="_blank" rel="noopener"><i class="fas fa-map-marked-alt" aria-hidden="true"></i></a>
                     <a href="{{ route('address.admin', ['country' => $country->uuid]) }}" class="btn btn-sm text-info" target="_blank" rel="noopener"><i class="fas fa-database" aria-hidden="true"></i></a>
                     <a href="{{ route('address.create', ['country' => $country->uuid]) }}" class="btn btn-sm"><i class="fas fa-plus text-info" aria-hidden="true"></i></a>
                     <button type="submit" class="btn btn-sm"><i class="fas fa-trash text-danger" aria-hidden="true"></i></button>

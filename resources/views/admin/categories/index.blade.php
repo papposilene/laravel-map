@@ -58,7 +58,7 @@
             @endphp
             <li class="list-group-item{{ $deleted }}">
                 <span class="badge badge-light badge-pill float-right">
-                    <a href="{{ route('category.index', ['slug' => $category->slug]) }}" class="text-primary"><i class="fas fa-list-ul" aria-hidden="true"></i></a> |
+                    <a href="{{ route('map', ['category' => $category->uuid]) }}" class="text-primary"><i class="fas fa-map-marked-alt" aria-hidden="true"></i></a> |
                     <a href="{{ route('category.edit', ['uuid' => $category->uuid]) }}" class="text-info"><i class="fas fa-edit" aria-hidden="true"></i></a>
                     @isset($category->user_uuid)
                     @isset($category->deleted_at)

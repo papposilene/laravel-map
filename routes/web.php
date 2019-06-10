@@ -19,7 +19,9 @@ Auth::routes([
 ]);
   
 Route::redirect('/', '/home', 301);
-Route::get('home',                              'HomeController@index')->name('home');
+Route::get('home',                             'HomeController@home')->name('home');
+Route::get('map',                              'HomeController@map')->name('map');
+
   
 // Country
 Route::get('countries',                         'CountriesController@index')->name('country.index');
